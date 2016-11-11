@@ -1,0 +1,7 @@
+/node_modules/*
+/.sass-cache/*/*
+/public/*
+!/public/img/
+/app/config/database.js
+*.log
+.DS_Store
