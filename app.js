@@ -6,7 +6,8 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     session = require('express-session'),
     flash = require('connect-flash'),
-    async = require('async');
+    async = require('async'),
+    dotenv = require('dotenv').config();
 
 // Integrating socket.io
 var app = express();
@@ -49,7 +50,7 @@ app.use(function(req, res, next) {
 app.use(function(err, req, res, next) {
     // Set locals, only providing error in development
     res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
+    res.locals.error = process.env.APP_ENV === 'development' ? err : {};
 
     // Render the error page
     res.status(err.status || 500);

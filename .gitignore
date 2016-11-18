@@ -2,6 +2,6 @@
 /.sass-cache/*/*
 /public/*
 !/public/img/
-/app/config/database.js
+/.env
 *.log
 .DS_Store

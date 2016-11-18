@@ -3,15 +3,18 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "setup": "node ./bin/setup",
     "start": "node ./bin/www"
   },
   "dependencies": {
     "async": "^2.1.2",
     "body-parser": "~1.15.2",
     "browser-sync": "^2.17.5",
+    "cmdify": "^0.0.4",
     "connect-flash": "^0.1.1",
     "cookie-parser": "~1.4.3",
     "debug": "~2.2.0",
+    "dotenv": "^2.0.0",
     "express": "~4.14.0",
     "express-session": "^1.14.2",
     "gulp": "^3.9.1",
@@ -24,6 +27,7 @@
     "gulp-rename": "^1.2.2",
     "gulp-uglify": "^2.0.0",
     "gulp-watch": "^4.3.10",
+    "inquirer": "^1.2.3",
     "jshint": "^2.9.4",
     "jshint-stylish": "^2.2.1",
     "morgan": "~1.7.0",

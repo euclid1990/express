@@ -12,8 +12,9 @@ var http = require('http');
 /**
  * Get port from environment and store in Express.
  */
-
-var port = normalizePort(process.env.PORT || '3000');
+// If start server with Nodemon, change port to proxy mode
+var appPort = (process.env.NODEMON || false) ? process.env.APP_PORT_PROXY : process.env.APP_PORT;
+var port = normalizePort(appPort || '3000');
 app.set('port', port);
 
 /**

@@ -14,15 +14,16 @@ var gulp          = r('gulp'),
     browserify    = r('gulp-browserify'),
     browserSync   = r('browser-sync'),
     nodemon       = r('gulp-nodemon'),
-    runSequence   = r('run-sequence');
+    runSequence   = r('run-sequence'),
+    dotenv        = r('dotenv').config();
 
 /**
  * Configuration assets of project
  */
 var project = {
     basePath: './',
-    origin_port: 3000,
-    forward_port: 8000,
+    origin_port: parseInt(process.env.APP_PORT),
+    proxy_port: parseInt(process.env.APP_PORT_PROXY),
     init: function() {
         this.scripts        = this.basePath + '/assets/scripts';
         this.stylesheets    = this.basePath + '/assets/stylesheets';
@@ -30,7 +31,7 @@ var project = {
         this.css            = this.basePath + '/public/css';
         this.fonts          = this.basePath + '/public/fonts';
         this.bower          = this.basePath + '/public/bower';
-        this.proxy          = 'http://localhost:' + this.origin_port;
+        this.proxy          = 'http://localhost:' + this.proxy_port;
         this.banner         = '/**\n' +
                               ' * <%= pkg.name %>\n' +
                               ' * <%= grunt.template.today("yyyy-mm-dd") %>\n' +
@@ -103,7 +104,7 @@ gulp.task('nodemon', function(callback) {
     var called = false;
     var stream = nodemon({
         script: 'bin/www',
-        env: {'NODE_ENV': 'development' , 'port': project.origin_port},
+        env: {'NODEMON': true},
         ext: 'js',
         ignore: ['.sass-cache/**/*', 'assets/**/*.*'],
         watch: ['bin/www', 'app.js', 'app/**/*.js'],
@@ -123,7 +124,7 @@ gulp.task('nodemon', function(callback) {
         stream.emit('restart', 10);
     }).once('exit', function() {
         console.log('Nodemon: Exiting the process');
-        // process.exit();
+        process.exit();
     });
 });
 
@@ -133,9 +134,9 @@ gulp.task('browser-sync', ['nodemon'], function() {
             target: project.proxy,
             ws: true
         },
-        files: ['public/**/*.{html,htm,css,js}', 'app/views/**/*.*'],
+        files: ['public/**/*.{html,htm,css,js,png,jpg}', 'app/views/**/*.*'],
         browser: [],
-        port: project.forward_port,
+        port: project.origin_port,
         ghostMode: false,
         open: 'external',
     });

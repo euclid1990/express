@@ -9,8 +9,11 @@
   - Setup pooled MySQL connections
   - Avoiding Callback Hell, managing callbacks in MySQL with Async.js.
   - Mack socket.io work fine with the Express generator setup.
+  - Load environment variables from a .env file
 
 ## Setup and Run Project
+
+- Clone source and install necessary packages
 
 ```bash
 $ git clone git@github.com:euclid1990/express.git my-proj
@@ -22,18 +25,25 @@ $ bower install
 - Create new database name: `express`
 
 ```
-CREATE DATABASE express
+$ mysql -u{your_username} -p{your_password}
+mysql> CREATE DATABASE express
     DEFAULT CHARACTER SET utf8
     DEFAULT COLLATE utf8_general_ci;
 ```
 
-- Import `database.sql` into `express` Mysql database
+- Import `database.sql` into `express` MySQL database
 
 ```
-mysql -u{your_username} -p{your_password} express < database.sql
+$ mysql -u{your_username} -p{your_password} express < database.sql
 ```
 
-- After copy `app/config/database.example.js` into folder `app/config/` and rename file to `database.js`, please change configuration for correspondence.
+- Run arbitrary package script to change `.env` configuration for correspondence.
+
+```
+$ npm run setup
+```
+
+- Start server
 
 ```
 $ gulp start
@@ -42,7 +52,7 @@ $ gulp start
 ## Access Application
 
 ```
-http://localhost:8000/
+http://localhost:3000/
 ```
 
 ## Stop Browser-sync and Nodemon server

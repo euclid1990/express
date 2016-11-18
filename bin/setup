@@ -1,0 +1,72 @@
+#!/usr/bin/env node
+
+/**
+* Module dependencies.
+*/
+
+var r = require;
+var inquirer = r('inquirer'),
+    fs = r('fs'),
+    path = require('path'),
+    dotenv = r('dotenv');
+
+const INTERVAL = 300;
+const ENCODING = 'utf-8';
+const ENV_FILE = path.join(__dirname, '../.env');
+const ENV_EXAMPLE = path.join(__dirname, '../.env.example');
+
+var spinnerBar = function(pipe) {
+    var spinner = [
+            '| Loading',
+            '/ Loading',
+            '- Loading',
+            '\\ Loading'
+        ],
+        i = spinner.length,
+        ui = new inquirer.ui.BottomBar({bottomBar: spinner[i % 4]});
+
+    setInterval(function () {
+        ui.updateBottomBar(spinner[i++ % 4]);
+    }, INTERVAL);
+    pipe(ui);
+}
+
+function createQuestions() {
+    var configs = dotenv.parse(fs.readFileSync(ENV_EXAMPLE, { encoding: ENCODING })),
+        questions = [];
+    for(var key of Object.keys(configs)) {
+        questions.push({
+            type: 'input',
+            name: key,
+            message: `${key}: `,
+            default: configs[key]
+        });
+    }
+    return questions;
+}
+
+function createContent(answers) {
+    var content = "";
+    for(var key of Object.keys(answers)) {
+        content += `${key}=${answers[key]}\n`;
+    }
+    return content.trim();
+}
+
+var questions = createQuestions();
+
+inquirer.prompt({
+    type: 'confirm',
+    name: 'agree',
+    message: 'Do you want to generate .env file?',
+}).then(function(confirm) {
+    if (!confirm.agree) {
+        process.exit();
+    };
+    inquirer.prompt(questions).then(function(answers) {
+        var content = createContent(answers);
+        fs.writeFileSync(ENV_FILE, content);
+        console.log('Done!. Results;');
+        console.log(`+------------------+\n${content}\n+------------------+`);
+    });
+});
