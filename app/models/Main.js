@@ -3,7 +3,19 @@ var Base = require('./Base'),
 
 var Main = model.extend({
     all: function(callback) {
-        this.db.query('SELECT * FROM users', callback || function(){});
+        this.query('SELECT * FROM users', function(err, rows, fields) {
+            callback(err, rows);
+        });
+    },
+    count: function(callback) {
+        this.query('SELECT COUNT(*) AS total FROM users', function(err, rows, fields) {
+            callback(err, rows);
+        });
+    },
+    get: function(params, callback) {
+        this.query('SELECT * FROM users WHERE id = ?', params, function(err, rows, fields) {
+            callback(err, rows);
+        });
     },
 });
 

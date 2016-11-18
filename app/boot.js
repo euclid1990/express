@@ -23,10 +23,11 @@ module.exports = function(parent, options) {
             var prefix = routes[name].path || '/',
                 before = routes[name].before || null;
             var app = express();
-            var handler;
-            var router = express.Router(),
+            var handler,
+                router = express.Router(),
                 routeMethod,
                 routePath;
+
             // Convert controller name to lowercase letters
             name = name.toLowerCase();
             // Allow specifying the view engine
@@ -50,7 +51,7 @@ module.exports = function(parent, options) {
                         break;
                     case 'create':
                         routeMethod = 'get';
-                        routePath = '/' + name;
+                        routePath = '/' + name + '/create';
                         break;
                     case 'store':
                         routeMethod = 'post';

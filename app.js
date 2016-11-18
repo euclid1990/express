@@ -1,10 +1,12 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var session = require('express-session');
+var express = require('express'),
+    path = require('path'),
+    favicon = require('serve-favicon'),
+    logger = require('morgan'),
+    cookieParser = require('cookie-parser'),
+    bodyParser = require('body-parser'),
+    session = require('express-session'),
+    flash = require('connect-flash'),
+    async = require('async');
 
 // Integrating socket.io
 var app = express();
@@ -21,11 +23,16 @@ app.use(session({
     saveUninitialized: true
 }));
 
+// Enabling cookieParser
+app.use(cookieParser());
+
+// Flash messages are stored in the session
+app.use(flash());
+
 app.use(favicon(path.join(__dirname, 'public/img', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Load controllers

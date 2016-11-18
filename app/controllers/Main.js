@@ -1,15 +1,24 @@
 var Main = require('../models/Main'),
-    model = new Main();
+    model = new Main(),
+    helper = require('../libraries/helper'),
+    async = require('async');
 
-exports.index = function(req, res){
-    model.all(function(err, rows, fields) {
-        if (err) throw err;
-        console.log('Rows: ', rows.length);
-    });
+exports.index = function(req, res, next){
+    var total = 0;
     req.session.user = "faked_user";
-    res.render('index', { title: 'Express' });
+    async.series([
+        model.all.bind(model),
+        model.count.bind(model),
+        model.get.bind(model, [2])
+    ], function(err, results) {
+        if (err) return next(err);
+        var [users, total, user] = [results[0], results[1][0].total, results[2]];
+        console.log(`MainController|Result: ${total}`);
+        res.render('index', { title: 'Express', total: total });
+    });
 };
 
 exports.create = function(req, res){
-    res.render('index', { title: 'Create' });
+    req.flash('info', 'Flash is back!')
+    res.render('create');
 };

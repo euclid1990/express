@@ -1,7 +1,7 @@
 var mysql = require('../libraries/mysql');
 
 module.exports = function(db) {
-    if (!db) db = mysql.conn;
+    if (!db) db = mysql.pool;
     this.db = db;
 }
 
@@ -19,5 +19,18 @@ module.exports.prototype = {
     },
     getDb: function() {
         return this.db;
+    },
+    query: function(query, params, callback) {
+        return this.db.getConnection(function(err, connection) {
+            if (typeof params === 'function') {
+                callback = params;
+                params = null;
+            }
+            if (err) return callback(err, null);
+            connection.query(query, params, function(err, rows, fields) {
+                callback(err, rows, fields) || function(){};
+                connection.release();
+            });
+        });
     }
 }
