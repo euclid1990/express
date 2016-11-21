@@ -13,7 +13,7 @@ var Main = model.extend({
         });
     },
     get: function(params, callback) {
-        this.query('SELECT * FROM users WHERE id = ?', params, function(err, rows, fields) {
+        this.builder.select('id', 'name').from('users').orderBy('id', 'ASC').exec(function(err, rows, fields) {
             callback(err, rows);
         });
     },

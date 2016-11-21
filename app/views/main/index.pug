@@ -4,3 +4,6 @@ block content
     h1= title
     p Welcome to #{title}
     p Total records: #{total}
+    p User:
+        pre !{JSON.stringify(user, null, 2)}
+    p Flash: #{info}

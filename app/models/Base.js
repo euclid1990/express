@@ -1,8 +1,24 @@
-var mysql = require('../libraries/mysql');
+var mysql = require('../libraries/mysql'),
+    queryBuilder = require('knex/lib/query/builder'),
+    knex = require('knex')({ client: 'mysql'});
 
 module.exports = function(db) {
     if (!db) db = mysql.pool;
     this.db = db;
+
+    // Custom functions to knex
+    this.builder = knex;
+    queryBuilder.prototype.exec = function (callback) {
+        var query = this.toString();
+        return db.getConnection(function(err, connection) {
+            if (typeof callback !== 'function') callback = function(){};
+            if (err) return callback(err, null);
+            connection.query(query, function(err, rows, fields) {
+                callback(err, rows, fields) || function(){};
+                connection.release();
+            });
+        });
+    };
 }
 
 module.exports.prototype = {

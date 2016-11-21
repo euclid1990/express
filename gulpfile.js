@@ -124,7 +124,7 @@ gulp.task('nodemon', function(callback) {
         stream.emit('restart', 10);
     }).once('exit', function() {
         console.log('Nodemon: Exiting the process');
-        process.exit();
+        // process.exit();
     });
 });
 

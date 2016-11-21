@@ -14,7 +14,7 @@ exports.index = function(req, res, next){
         if (err) return next(err);
         var [users, total, user] = [results[0], results[1][0].total, results[2]];
         console.log(`MainController|Result: ${total}`);
-        res.render('index', { title: 'Express', total: total });
+        res.render('index', { title: 'Express', total: total, user: user, info: req.flash('info') });
     });
 };
 
