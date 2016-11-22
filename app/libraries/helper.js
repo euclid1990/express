@@ -38,7 +38,7 @@ module.exports = {
                 break;
             case 'show':
             case 'update':
-            case 'delete':
+            case 'destroy':
                 path = `/${name}/${id}`;
                 break;
             case 'create':
@@ -55,5 +55,9 @@ module.exports = {
         }
 
         return path;
+    },
+
+    trailingSlash: function(str) {
+        return str.replace(/^\/+|\/+$/g, '/');
     }
 };

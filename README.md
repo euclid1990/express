@@ -5,10 +5,10 @@
 - Features
   - Minification and copying of all JavaScript files, stylesheets, static images with Gulp
   - Monitor for any changes in your node.js application and automatically restart the server by Nodemon, Browser-sync
-  - MVC structure (Model, View, Controller, Helper, Route(restful))
+  - MVC structure (Model, View, Controller, Helper, Route(restful, implicit))
   - Setup pooled MySQL connections
   - Avoiding Callback Hell, managing callbacks in MySQL with Async.js.
-  - Mack socket.io work fine with the Express generator setup.
+  - Make socket.io work fine with the Express generator setup.
   - Load environment variables from a .env file
 
 ## Setup and Run Project

@@ -1,37 +1,29 @@
-@mixin margin-top($top) {
-    margin-top: $top;
+@mixin margin($type, $length) {
+    .margin-#{$type}-#{$length} {
+        @if ($type == 'top') {
+            margin-top: #{$length}px;
+        } @elseif ($type == 'bottom') {
+            margin-bottom: #{$length}px;
+        } @elseif ($type == 'left') {
+            margin-left: #{$length}px;
+        } @elseif ($type == 'right') {
+            margin-right: #{$length}px;
+        } @elseif ($type == 'top-bottom') {
+            margin-top: #{$length}px;
+            margin-bottom: #{$length}px;
+        } @elseif ($type == 'left-right') {
+            margin-left: #{$length}px;
+            margin-right: #{$length}px;
+        }
+    }
 }
 
-@mixin margin-bottom($bottom) {
-    margin-bottom: $bottom;
-}
-
-@mixin margin-left($top) {
-    margin-left: $top;
-}
-
-@mixin margin-right($top) {
-    margin-right: $top;
-}
-
-@mixin margin-top-bottom($top, $bottom) {
-    margin-top: $top;
-    margin-bottom: $bottom;
-}
-
-@mixin margin-left-right($left, $right) {
-    margin-left: $left;
-    margin-right: $right;
-}
-
-@mixin padding-top-bottom($top, $bottom) {
-    padding-top: $top;
-    padding-bottom: $bottom;
-}
-
-@mixin padding-left-right($left, $right) {
-    padding-left: $left;
-    padding-right: $right;
+$marginType: top bottom left right top-bottom left-right;
+$marginLength: 10 15;
+@each $length in $marginLength {
+    @each $type in $marginType {
+        @include margin($type, $length);
+    }
 }
 
 .break-word {
@@ -49,4 +41,33 @@ html {
 body {
     font-size: 15px;
     padding-top: 10px;
+}
+
+/**
+ * Style of Form
+ */
+.form-header {
+    margin: 15px auto;
+    font-size: 20px;
+    color: #666;
+    text-align: center;
+}
+.form-error {
+    font-size: 12px;
+    margin-top: 5px;
+    padding: 5px;
+    color: #a94442;
+    background-color: #f2dede;
+    border: 1px solid transparent;
+    border-color: #dca7a7;
+    border-radius: 4px;
+}
+.form-success {
+    font-size: 12px;
+    margin-top: 5px;
+    padding: 5px;
+    color: #666666;
+    background-color: #E1F3DD;
+    border: 1px solid #42A948;
+    border-radius: 4px;
 }

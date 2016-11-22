@@ -14,6 +14,9 @@ var routes = {
         before: {
             create: middleware.authenticate
         }
+    },
+    Auth: {
+        path: '/auth'
     }
 };
 

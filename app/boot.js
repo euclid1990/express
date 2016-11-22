@@ -5,6 +5,8 @@
 var express = require('express'),
     fs = require('fs'),
     path = require('path'),
+    helper = require('./libraries/helper'),
+    inspector = require('./libraries/inspector'),
     routes = require('./routes/web'),
     mysql = require('./libraries/mysql');
 
@@ -43,37 +45,45 @@ module.exports = function(parent, options) {
                 switch (key) {
                     case 'index':
                         routeMethod = 'get';
-                        routePath = '/';
+                        routePath = prefix;
                         break;
                     case 'show':
                         routeMethod = 'get';
-                        routePath = '/' + name + '/:id';
+                        routePath = prefix + '/:id';
                         break;
                     case 'create':
                         routeMethod = 'get';
-                        routePath = '/' + name + '/create';
+                        routePath = prefix + '/create';
                         break;
                     case 'store':
                         routeMethod = 'post';
-                        routePath = '/' + name;
+                        routePath = prefix;
                         break;
                     case 'edit':
                         routeMethod = 'get';
-                        routePath = '/' + name + '/:id/edit';
+                        routePath = prefix + '/:id/edit';
                         break;
                     case 'update':
                         routeMethod = 'put';
-                        routePath = '/' + name + '/:id';
+                        routePath = prefix + '/:id';
                         break;
                     case 'delete':
                         routeMethod = 'delete';
-                        routePath = '/' + name + '/:id';
+                        routePath = prefix + '/:id';
                         break;
                     default:
-                        /* istanbul ignore next */
-                        throw new Error('Unrecognized route: ' + name + '.' + key);
+                        // Implicit controller routes
+                        var routeable = inspector.getRoutable(key);
+                        if (routeable) {
+                            routeMethod = routeable.verb;
+                            routePath = prefix + '/' + routeable.uri;
+                        } else {
+                            // Action mapped to incorrect route
+                            throw new Error('Unrecognized route: ' + name + '.' + key);
+                        }
                 }
-
+                // Remove first and last slash
+                routePath = helper.trailingSlash(routePath);
                 // Setup controller action
                 handler = obj[key];
 
@@ -86,8 +96,7 @@ module.exports = function(parent, options) {
                     verbose && console.log('    %s %s -> %s', routeMethod.toUpperCase(), routePath, key);
                 }
             }
-
-            app.use(prefix, router);
+            app.use(router);
 
             // Mount the app
             parent.use(app);
