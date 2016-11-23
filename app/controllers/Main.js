@@ -3,9 +3,8 @@ var Main = require('../models/Main'),
     helper = require('../libraries/helper'),
     async = require('async');
 
-exports.index = function(req, res, next){
+exports.index = function(req, res, next) {
     var total = 0;
-    req.session.user = "faked_user";
     async.series([
         model.all.bind(model),
         model.count.bind(model),
@@ -18,7 +17,7 @@ exports.index = function(req, res, next){
     });
 };
 
-exports.create = function(req, res){
+exports.create = function(req, res) {
     req.flash('info', 'Flash is back!')
     res.render('create');
 };

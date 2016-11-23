@@ -6,6 +6,7 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     session = require('express-session'),
     flash = require('connect-flash'),
+    passport = require('passport'),
     async = require('async'),
     dotenv = require('dotenv').config();
 
@@ -17,15 +18,15 @@ var io = require('socket.io')(server);
 // View engine setup
 app.set('view engine', 'pug');
 
+// Enabling cookieParser
+app.use(cookieParser());
+
 // Create a session middleware
 app.use(session({
     secret: 'my_secret_key',
     resave: true,
     saveUninitialized: true
 }));
-
-// Enabling cookieParser
-app.use(cookieParser());
 
 // Flash messages are stored in the session
 app.use(flash());
@@ -35,6 +36,10 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Setup passport
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Load controllers
 require('./app/boot')(app, { io: io, verbose: !module.parent });

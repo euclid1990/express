@@ -1,3 +1,6 @@
+// Module exports forward declaration
+module.exports = function() {};
+
 module.exports = {
     twodigit: function(value) {
         return `0${value}`.slice(-2);
@@ -26,6 +29,10 @@ module.exports = {
         var [name, action] = resource.split('.'),
             path = '',
             id = params;
+        var route = routes[module.exports.ucfirst(name)];
+        if (route === 'undefined') return null;
+        var prefix = route.path || '/';
+
         if (typeof name === 'undefined' || typeof action === 'undefined') {
             return path;
         }
@@ -34,30 +41,62 @@ module.exports = {
         }
         switch (action) {
             case 'index':
-                path = '/';
+                path = `/${prefix}`;
                 break;
             case 'show':
             case 'update':
             case 'destroy':
-                path = `/${name}/${id}`;
+                path = `/${prefix}/${id}`;
                 break;
             case 'create':
-                path = `/${name}/create`;
+                path = `/${prefix}/create`;
                 break;
             case 'store':
-                path = `/${name}`;
+                path = `/${prefix}`;
                 break;
             case 'edit':
-                path = `/${name}/${id}/edit`;
+                path = `/${prefix}/${id}/edit`;
                 break;
             default:
-                return null;
+                var routeable = inspector.getRoutable(action);
+                if (routeable) {
+                    path = prefix + '/' + routeable.uri;
+                } else {
+                    // Action mapped to incorrect route
+                    return null;
+                }
         }
-
+        path = module.exports.trailingSlash(path);
         return path;
     },
 
     trailingSlash: function(str) {
         return str.replace(/^\/+|\/+$/g, '/');
-    }
+    },
+
+    ucfirst: function(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    },
+
+    old: function(key, input, defaultvalue = null) {
+        if (input && typeof input[key] !== "undefined") {
+            return input[key];
+        }
+        return defaultvalue;
+    },
+
+    flash: function(key, request) {
+        var data = request.flash(key);
+        if (data.length) {
+            return data.shift();
+        }
+        return null;
+    },
 };
+
+/**
+ * Prevent circular require dependencies
+ * Load order: {libraries/helper} > {middlewares/authenticate} > {routes/web} modules
+ */
+var inspector = require('./inspector'),
+    routes = require('../routes/web');

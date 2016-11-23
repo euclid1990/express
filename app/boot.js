@@ -16,6 +16,7 @@ module.exports = function(parent, options) {
         // Define option parameters
         var io = options.io,
             verbose = options.verbose;
+
         // Routes and callbacks are stored in memory to serve all future requests
         fs.readdirSync(__dirname + '/controllers').forEach(function(name) {
 
@@ -35,6 +36,15 @@ module.exports = function(parent, options) {
             // Allow specifying the view engine
             if (obj.engine) app.set('view engine', obj.engine);
             app.set('views', path.join(__dirname, '/views/', name));
+            // Add pretty-indentation whitespace to output HTML
+            app.locals.pretty = true;
+
+            // Make helper function available only to the views
+            app.use(function(req, res, next) {
+                res.locals.helper = helper;
+                res.locals.currentUser = req.isAuthenticated() ? req.session.passport.user : null;
+                next();
+            });
 
             // Generate routes based on the exported methods
             for (var key in obj) {
@@ -45,48 +55,47 @@ module.exports = function(parent, options) {
                 switch (key) {
                     case 'index':
                         routeMethod = 'get';
-                        routePath = prefix;
+                        routePath = '/';
                         break;
                     case 'show':
                         routeMethod = 'get';
-                        routePath = prefix + '/:id';
+                        routePath = '/:id';
                         break;
                     case 'create':
                         routeMethod = 'get';
-                        routePath = prefix + '/create';
+                        routePath = '/create';
                         break;
                     case 'store':
                         routeMethod = 'post';
-                        routePath = prefix;
+                        routePath = '/';
                         break;
                     case 'edit':
                         routeMethod = 'get';
-                        routePath = prefix + '/:id/edit';
+                        routePath = '/:id/edit';
                         break;
                     case 'update':
                         routeMethod = 'put';
-                        routePath = prefix + '/:id';
+                        routePath = '/:id';
                         break;
                     case 'delete':
                         routeMethod = 'delete';
-                        routePath = prefix + '/:id';
+                        routePath = '/:id';
                         break;
                     default:
                         // Implicit controller routes
                         var routeable = inspector.getRoutable(key);
                         if (routeable) {
                             routeMethod = routeable.verb;
-                            routePath = prefix + '/' + routeable.uri;
+                            routePath = `/${routeable.uri}`;
                         } else {
                             // Action mapped to incorrect route
                             throw new Error('Unrecognized route: ' + name + '.' + key);
                         }
                 }
                 // Remove first and last slash
-                routePath = helper.trailingSlash(routePath);
+                routePath = helper.trailingSlash(`/${routePath}`);
                 // Setup controller action
                 handler = obj[key];
-
                 // Support before middleware
                 if (before && before[key]) {
                     router[routeMethod](routePath, before[key], handler);
@@ -96,7 +105,7 @@ module.exports = function(parent, options) {
                     verbose && console.log('    %s %s -> %s', routeMethod.toUpperCase(), routePath, key);
                 }
             }
-            app.use(router);
+            app.use(prefix, router);
 
             // Mount the app
             parent.use(app);

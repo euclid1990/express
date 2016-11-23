@@ -1,22 +1,20 @@
 // Authentication and Authorization Middleware
-var middleware = {
-    authenticate: function(req, res, next) {
-        if (req.session && req.session.user)
-            return next();
-        else
-            return res.sendStatus(401);
-    }
-};
+var authenticateMW = require('./../middleware/authenticate'),
+    redirectIfAuthenticatedMW = require('./../middleware/redirect-if-authenticated');
 
 var routes = {
     Main: {
         path: '/',
         before: {
-            create: middleware.authenticate
+            create: authenticateMW
         }
     },
     Auth: {
-        path: '/auth'
+        path: '/auth',
+        before: {
+            getLogin: redirectIfAuthenticatedMW,
+            getRegister: redirectIfAuthenticatedMW
+        }
     }
 };
 
