@@ -6,6 +6,9 @@
         return this.length !== 0;
     };
 
-    var socket = io("http://172.17.0.3:3000/");
+    if (!window.location.origin) {
+        window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+    }
+    var socket = io(window.location.origin);
 
 })(jQuery);
