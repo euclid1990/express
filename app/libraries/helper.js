@@ -92,6 +92,10 @@ module.exports = {
         }
         return null;
     },
+
+    stringify: function(obj) {
+        return JSON.stringify(obj, null, 2);
+    }
 };
 
 /**

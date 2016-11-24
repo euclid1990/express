@@ -34,10 +34,12 @@ module.exports = function(parent, options) {
             // Convert controller name to lowercase letters
             name = name.toLowerCase();
             // Allow specifying the view engine
-            if (obj.engine) app.set('view engine', obj.engine);
+            if (obj.engine) {
+                app.set('view engine', obj.engine);
+                // Add pretty-indentation whitespace to output HTML
+                app.locals.pretty = true;
+            }
             app.set('views', path.join(__dirname, '/views/', name));
-            // Add pretty-indentation whitespace to output HTML
-            app.locals.pretty = true;
 
             // Make helper function available only to the views
             app.use(function(req, res, next) {

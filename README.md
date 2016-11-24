@@ -14,6 +14,7 @@
   - Make socket.io work fine with the Express generator setup.
   - Load environment variables from a .env file
   - Easy Node Authentication using Passport.js
+  - `HTML-like` templating engine with Nunjucks.
 
 ## Setup and Run Project
 

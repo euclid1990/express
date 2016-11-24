@@ -1,0 +1,11 @@
+{% extends "../layout.html" %}
+
+{% block content %}
+    <h1>{{ title }}</h1>
+    <hr>
+    <p>Create page</p>
+    <hr>
+    <p>Current logged in user:
+      <pre>{{ helper.stringify(currentUser) }}</pre>
+    </p>
+{% endblock %}

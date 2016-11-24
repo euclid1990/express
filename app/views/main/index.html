@@ -1,0 +1,20 @@
+{% extends "../layout.html" %}
+
+{% block content %}
+    <h1>{{ title }}</h1>
+    <hr>
+    <p>Welcome to {{ title }}</p>
+    <hr>
+    {% if currentUser %}
+    <a href="{{ helper.route('main.create') }}">Create Page</a>
+    <a href="{{ helper.route('auth.getLogout') }}">Logout Page</a>
+    {% else %}
+    <a href="{{ helper.route('auth.getLogin') }}">Login Page</a> username: delia84 - password: 123456
+    {% endif %}
+    <hr>
+    <p>Total records: {{ total }}</p>
+    <p>User:
+      <pre>{{ helper.stringify(user) }}</pre>
+    </p>
+    <p>Flash: {{ info }}</p>
+{% endblock %}

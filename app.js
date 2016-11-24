@@ -1,5 +1,6 @@
 var express = require('express'),
     path = require('path'),
+    nunjucks = require('nunjucks'),
     favicon = require('serve-favicon'),
     logger = require('morgan'),
     cookieParser = require('cookie-parser'),
@@ -16,7 +17,14 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
 // View engine setup
-app.set('view engine', 'pug');
+nunjucks.configure(path.join(__dirname, 'app/views/'), {
+    autoescape: true,
+    cache: false,
+    watch: true,
+    express: app
+});
+app.engine('html', nunjucks.render);
+app.set('view engine', 'html');
 
 // Enabling cookieParser
 app.use(cookieParser());
@@ -54,12 +62,13 @@ app.use(function(req, res, next) {
 // Error handler
 app.use(function(err, req, res, next) {
     // Set locals, only providing error in development
+    res.locals.title = err.status || "500 Internal Server Error";
     res.locals.message = err.message;
     res.locals.error = process.env.APP_ENV === 'development' ? err : {};
 
     // Render the error page
     res.status(err.status || 500);
-    res.render(path.join(__dirname, 'app/views/error/500'));
+    res.render('error/500');
 });
 
 module.exports = {app: app, server: server};
