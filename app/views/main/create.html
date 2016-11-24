@@ -6,6 +6,6 @@
     <p>Create page</p>
     <hr>
     <p>Current logged in user:
-      <pre>{{ helper.stringify(currentUser) }}</pre>
+      <pre>{{ currentUser | dump }}</pre>
     </p>
 {% endblock %}

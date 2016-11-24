@@ -5,6 +5,7 @@
 var express = require('express'),
     fs = require('fs'),
     path = require('path'),
+    changeCase = require('change-case'),
     helper = require('./libraries/helper'),
     inspector = require('./libraries/inspector'),
     routes = require('./routes/web'),
@@ -23,6 +24,8 @@ module.exports = function(parent, options) {
             verbose && console.log('\n   %s:', name);
             var obj = require('./controllers/' + name);
             var name = obj.name || path.parse(name).name;
+            // Remove suffix 'controller'
+            name = changeCase.pascalCase(name.replace(/(controller)$/i, ''));
             var prefix = routes[name].path || '/',
                 before = routes[name].before || null;
             var app = express();

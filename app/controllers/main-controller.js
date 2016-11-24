@@ -1,4 +1,4 @@
-var Main = require('../models/Main'),
+var Main = require('../models/main'),
     model = new Main(),
     helper = require('../libraries/helper'),
     async = require('async');
@@ -18,6 +18,6 @@ exports.index = function(req, res, next) {
 };
 
 exports.create = function(req, res) {
-    req.flash('info', 'Flash is back!')
+    req.flash('info', 'Back from create page!')
     res.render('create');
 };

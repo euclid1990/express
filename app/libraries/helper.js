@@ -103,4 +103,5 @@ module.exports = {
  * Load order: {libraries/helper} > {middlewares/authenticate} > {routes/web} modules
  */
 var inspector = require('./inspector'),
-    routes = require('../routes/web');
+    routes = require('../routes/web'),
+    changeCase = require('change-case');

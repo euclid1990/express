@@ -1,4 +1,4 @@
-var Base = require('./Base'),
+var Base = require('./base'),
     model = new Base();
 
 var User = model.extend({

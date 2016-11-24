@@ -1,6 +1,6 @@
 var passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy,
-    User = require('../models/User'),
+    User = require('../models/user'),
     userModel = new User(),
     helper = require('../libraries/helper'),
     async = require('async'),
