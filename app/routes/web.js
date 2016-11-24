@@ -1,4 +1,4 @@
-// Authentication and Authorization Middleware
+// Authentication, Authorization, Validator Middleware
 var authenticateMW = require('./../middleware/authenticate'),
     redirectIfAuthenticatedMW = require('./../middleware/redirect-if-authenticated'),
     authValidator = require('../validators/auth-validator');

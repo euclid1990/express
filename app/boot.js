@@ -6,6 +6,8 @@ var express = require('express'),
     fs = require('fs'),
     path = require('path'),
     nunjucks = require('nunjucks'),
+    expressValidator = require('express-validator'),
+    validator = require('./validators/custom-validator'),
     helper = require('./libraries/helper'),
     inspector = require('./libraries/inspector'),
     mysql = require('./libraries/mysql');
@@ -14,6 +16,8 @@ module.exports = function(parent, options) {
 
 
     mysql.connect(function() {
+
+        parent.use(expressValidator(validator));
 
         // Define option parameters
         var nunEnv = options.nunEnv,

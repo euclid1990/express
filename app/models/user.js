@@ -3,7 +3,12 @@ var Base = require('./base'),
 
 var User = model.extend({
     findOne: function(params, callback) {
-        this.builder.select('id', 'name', 'password').from('users').where('username', params.username).limit(1).exec(function(err, rows, fields) {
+        this.builder.select('id', 'name', 'username', 'email').from('users').where('username', params.username).limit(1).exec(function(err, rows, fields) {
+            callback(err, rows);
+        });
+    },
+    findOneByEmail: function(params, callback) {
+        this.builder.select('id', 'name', 'username', 'email').from('users').where('email', params.email).limit(1).exec(function(err, rows, fields) {
             callback(err, rows);
         });
     },

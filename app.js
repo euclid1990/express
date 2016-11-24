@@ -9,7 +9,6 @@ var express = require('express'),
     flash = require('connect-flash'),
     passport = require('passport'),
     async = require('async'),
-    expressValidator = require('express-validator'),
     dotenv = require('dotenv').config();
 
 // Integrating socket.io
@@ -44,7 +43,6 @@ app.use(favicon(path.join(__dirname, 'public/img', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(expressValidator());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Setup passport
