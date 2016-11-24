@@ -7,6 +7,17 @@ var User = model.extend({
             callback(err, rows);
         });
     },
+    create: function(params, callback) {
+        console.log(params);
+        this.builder.insert({
+            name: params.name,
+            username: params.username,
+            email: params.email,
+            password: params.password,
+        }).into('users').exec(function(err, rows, fields) {
+            callback(err, rows);
+        });
+    },
 });
 
 module.exports = User;

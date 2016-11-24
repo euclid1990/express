@@ -1,10 +1,10 @@
 var passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy,
+    async = require('async'),
     User = require('../models/user'),
     userModel = new User(),
     helper = require('../libraries/helper'),
-    async = require('async'),
-    bcrypt = require('bcrypt');
+    authValidator = require('../validators/auth-validator');
 
 passport.use(new LocalStrategy({
         // Prefers to name these credential field
@@ -18,9 +18,7 @@ passport.use(new LocalStrategy({
                 return done(null, false, { message: 'Incorrect username.' });
             }
             user = user[0];
-            // Uses the $2y$ prefix by default, and can check correct $2a$ passwords
-            user.password = user.password.replace(/^\$2y/, "$2a");
-            if (!bcrypt.compareSync(password, user.password)) {
+            if (!helper.bcryptCompare(password, user.password)) {
                 return done(null, false, { message: 'Incorrect password.' });
             }
             // If the credentials are valid, return user that authenticated.
@@ -31,11 +29,11 @@ passport.use(new LocalStrategy({
 
 // Serialize and deserialize user instances to and from the session
 passport.serializeUser(function(user, done) {
-  done(null, user);
+    done(null, user);
 });
 
 passport.deserializeUser(function(user, done) {
-  done(null, user);
+    done(null, user);
 });
 
 exports.getLogin = function(req, res, next) {
@@ -62,11 +60,20 @@ exports.postLogin = function(req, res, next) {
 };
 
 exports.getRegister = function(req, res, next) {
-    res.render('register');
+    var errors = req.flash('errors');
+    res.locals.errors = helper.firstError(errors);
+    res.render('register', { input: helper.flash('input', req) });
 };
 
 exports.postRegister = function(req, res, next) {
-
+    req.body.password = helper.bcrypt(req.body.password);
+    async.series([
+        userModel.create.bind(userModel, req.body)
+    ], function(err, results) {
+        if (err) return next(err);
+        req.flash('message', 'You have successfully registered');
+        return res.redirect(helper.route('auth.getLogin'));
+    });
 };
 
 exports.getLogout = function(req, res, next) {

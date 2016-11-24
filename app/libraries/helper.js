@@ -95,6 +95,28 @@ module.exports = {
 
     stringify: function(obj) {
         return JSON.stringify(obj, null, 2);
+    },
+
+    bcryptCompare: function(plaintext, hash) {
+        // Uses the $2y$ prefix by default, and can check correct $2a$ passwords
+        hash = hash.replace(/^\$2y/, "$2a");
+        return bcrypt.compareSync(plaintext, hash);
+    },
+
+    bcrypt: function(plaintext, saltRounds = 10) {
+        var salt = bcrypt.genSaltSync(saltRounds);
+        var hash = bcrypt.hashSync(plaintext, salt);
+        return hash.replace(/^\$2a/, "$2y");
+    },
+
+    firstError: function(arr) {
+        var keys = [], result = [];
+        for (var val of arr) {
+            if (~keys.indexOf(val.param)) continue;
+            keys.push(val.param);
+            result.push(val);
+        }
+        return result;
     }
 };
 
@@ -104,4 +126,5 @@ module.exports = {
  */
 var inspector = require('./inspector'),
     routes = require('../routes/web'),
-    changeCase = require('change-case');
+    changeCase = require('change-case'),
+    bcrypt = require('bcrypt');

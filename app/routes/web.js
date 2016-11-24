@@ -1,6 +1,7 @@
 // Authentication and Authorization Middleware
 var authenticateMW = require('./../middleware/authenticate'),
-    redirectIfAuthenticatedMW = require('./../middleware/redirect-if-authenticated');
+    redirectIfAuthenticatedMW = require('./../middleware/redirect-if-authenticated'),
+    authValidator = require('../validators/auth-validator');
 
 var routes = {
     Main: {
@@ -13,7 +14,8 @@ var routes = {
         path: '/auth',
         before: {
             getLogin: redirectIfAuthenticatedMW,
-            getRegister: redirectIfAuthenticatedMW
+            getRegister: redirectIfAuthenticatedMW,
+            postRegister: [ redirectIfAuthenticatedMW, authValidator.postRegister ]
         }
     }
 };

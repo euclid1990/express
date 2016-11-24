@@ -6,10 +6,11 @@
     <p>Welcome to {{ title }}</p>
     <hr>
     {% if currentUser %}
-    <a href="{{ helper.route('main.create') }}">Create Page</a>
-    <a href="{{ helper.route('auth.getLogout') }}">Logout Page</a>
+    <a href="{{ helper.route('main.create') }}">Create</a><br>
+    <a href="{{ helper.route('auth.getLogout') }}">Logout</a>
     {% else %}
-    <a href="{{ helper.route('auth.getLogin') }}">Login Page</a> username: delia84 - password: 123456
+    <a href="{{ helper.route('auth.getRegister') }}">Register</a><br>
+    <a href="{{ helper.route('auth.getLogin') }}">Login</a> username: delia84 - password: 123456
     {% endif %}
     <hr>
     <p>Total records: {{ total }}</p>

@@ -9,6 +9,7 @@ var express = require('express'),
     flash = require('connect-flash'),
     passport = require('passport'),
     async = require('async'),
+    expressValidator = require('express-validator'),
     dotenv = require('dotenv').config();
 
 // Integrating socket.io
@@ -17,7 +18,7 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
 // View engine setup
-nunjucks.configure(path.join(__dirname, 'app/views/'), {
+var nunEnv = nunjucks.configure(path.join(__dirname, 'app/views/'), {
     autoescape: true,
     cache: false,
     watch: true,
@@ -43,6 +44,7 @@ app.use(favicon(path.join(__dirname, 'public/img', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(expressValidator());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Setup passport
@@ -50,7 +52,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Load controllers
-require('./app/boot')(app, { io: io, verbose: !module.parent });
+require('./app/boot')(app, { nunEnv: nunEnv, io: io, verbose: !module.parent });
 
 // Catch 404 and forward to error handler
 app.use(function(req, res, next) {
