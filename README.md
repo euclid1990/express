@@ -48,11 +48,15 @@ $ mysql -u{your_username} -p{your_password} express < database.sql
 $ npm run setup
 ```
 
+![Start server](public/img/guide/npm_run_setup.png)
+
 - Start server
 
 ```
 $ gulp start
 ```
+
+![Setup env](public/img/guide/gulp_start.png)
 
 ## Access Application
 

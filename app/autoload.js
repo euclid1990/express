@@ -108,6 +108,6 @@ module.exports = function(parent, verbose) {
         // Mount the app
         parent.use(app);
 
-        console.log('Assign controller dynamically');
     });
+    console.log('Assign controller dynamically');
 };
